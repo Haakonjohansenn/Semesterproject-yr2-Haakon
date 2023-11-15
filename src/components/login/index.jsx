@@ -63,14 +63,18 @@ export default function LoginForm() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex items-center justify-between">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Log In
-          </button>
-        </div>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+          type="submit"
+        >
+          Log In
+        </button>
+        <p className="text-gray-600 text-sm">
+          Dont have an account?{' '}
+          <a className="text-blue-500 hover:underline" href="/register">
+            Register here
+          </a>
+        </p>
       </form>
     </div>
   );
