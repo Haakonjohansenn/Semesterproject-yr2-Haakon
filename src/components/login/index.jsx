@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 
 export default function LoginForm() {
   // State for storing user credentials
@@ -71,9 +72,9 @@ export default function LoginForm() {
         </button>
         <p className="text-gray-600 text-sm">
           Dont have an account?{' '}
-          <a className="text-blue-500 hover:underline" href="/register">
+          <Link to="/register" className="text-blue-500 hover:underline">
             Register here
-          </a>
+          </Link>
         </p>
       </form>
     </div>
