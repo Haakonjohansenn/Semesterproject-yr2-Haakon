@@ -33,21 +33,21 @@ export default function Profile() {
   }, [userId]);
 
   return (
-    <div className="parent-container">
-      <div className="profile-card bg-cyan-700 w-11">
+    <div className="parent-container flex justify-center">
         {user ? (
           <div>
             <h1>Profile Information</h1>
+            <div className="avatar-container flex rounded-full w-28 bg-blue-500 justify-center">
+            {user.avatar && <img src={user.avatar} alt="Avatar" className="justify-center"/>}
+            </div>
             <p>Name: {user.name}</p>
             <p>Email: {user.email}</p>
             <p>Credits: {user.credits}</p>
             {/* Add more fields as needed */}
-            {user.avatar && <img src={user.avatar} alt="Avatar" />}
           </div>
         ) : (
           <p>Loading user profile...</p>
         )}
-      </div>
     </div>
   );
 }
