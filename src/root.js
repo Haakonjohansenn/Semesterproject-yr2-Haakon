@@ -1,9 +1,9 @@
 import { Router, Route, RootRoute } from "@tanstack/react-router";
-import LoginPage from "./pages/Login";
 import Profile from "./components/profile";
 import Root from "./App";
 import LoginForm from "./components/login";
 import RegisterForm from "./components/register";
+import HomePage from "./pages/Home";
 
 const rootRoute = new RootRoute({
   component: Root,
@@ -14,7 +14,7 @@ const rootRoute = new RootRoute({
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: LoginForm,
+  component: HomePage,
 });
 
 const loginRoute = new Route({

@@ -1,4 +1,4 @@
-import { API_URL } from "../../lib/constants";
+import { API_URL } from "../../../lib/constants";
 import { useState, useEffect } from "react";
 
 export default function FetchListings() {
@@ -54,11 +54,10 @@ export default function FetchListings() {
 
   return (
     <div>
-      <div className="listing-container flex flex-wrap gap-5">
+      <div className="listing-container">
         {listings.map(({id, title, media, updated}) => (
                     <div key={id} className="listing-item bg-cyan-400 w-40">
                     <h2>{title}</h2>
-                    <img src={media} alt="listing-image"></img>
                     {/* Display other properties as needed, for example: */}
                     <p>Updated: {updated}</p>
                     {/* Add more properties as needed */}
