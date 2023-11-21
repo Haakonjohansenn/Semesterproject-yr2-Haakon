@@ -77,15 +77,14 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white border rounded shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Register</h2>
-      <form onSubmit={onSubmit}>
+    <div className="min-h-screen flex items-center justify-center">
+      <form onSubmit={onSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-4/5 max-w-lg">
+      <h2 className="text-2xl font-semibold mb-6 text-center">Register</h2>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-            Name
           </label>
           <input
-            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             id="name"
             type="text"
             placeholder="Your Name"
@@ -94,10 +93,9 @@ export default function RegisterForm() {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-            Email
           </label>
           <input
-            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             id="email"
             type="email"
             placeholder="Your Email"
@@ -107,10 +105,9 @@ export default function RegisterForm() {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-            Password
           </label>
           <input
-            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             id="password"
             type="password"
             placeholder="Your Password"
@@ -122,7 +119,7 @@ export default function RegisterForm() {
             Avatar URL
           </label>
           <input
-            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             id="avatar"
             type="text"
             placeholder="URL for Your Avatar"
@@ -131,7 +128,7 @@ export default function RegisterForm() {
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"
             type="submit"
             id="submit-button"
           >
