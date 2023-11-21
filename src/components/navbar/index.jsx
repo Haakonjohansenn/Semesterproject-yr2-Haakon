@@ -1,13 +1,27 @@
+// Navbar.js
 import { Link } from "@tanstack/react-router";
 import { NAVIGATION } from "../../../lib/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+    // Additionally, you might want to redirect the user to the login page
+    // or perform any other necessary actions after logout.
+  };
+
+  // Check for the login status on component mount
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("accessToken"));
+  }, []);
 
   return (
     <nav className="bg-blue-500 p-4">
@@ -46,11 +60,22 @@ export default function Navbar() {
             <Link
               key={item.href}
               to={item.href}
-              className="text-white hover:text-blue-300 transition duration-300"
+              className="text-white hover:text-blue-300 transition duration-300 bg-gray"
             >
               {item.label}
             </Link>
           ))}
+          <div className="ml-auto mr-6">
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="text-white ml-auto">
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" className="text-white">
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -1,14 +1,18 @@
-import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { useState } from "react";
+import { API_URL } from "../../../lib/constants";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export default function LoginForm() {
-  // State for storing user credentials
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken") || null
+  );
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
-  // Function to handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prevCredentials) => ({
@@ -17,28 +21,61 @@ export default function LoginForm() {
     }));
   };
 
-  // Function to handle form submission
-  const handleFormSubmit = (e) => {
+  const handleLoginForm = async (e) => {
     e.preventDefault();
-    // You can add logic here to handle the login process, such as API calls
-    console.log('Login submitted with:', credentials);
+    console.log("Login submitted with:", credentials);
+
+    const navigateToProfile = () => {
+      setTimeout(() => {
+        navigate({ to: "/profile" });
+      }, 2000);
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/auction/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(credentials),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newAccessToken = data.accessToken;
+
+        // Store the access token securely in localStorage
+        localStorage.setItem("accessToken", newAccessToken);
+        localStorage.setItem("user_name", data.name);
+
+        setAccessToken(newAccessToken);
+
+        navigateToProfile();
+
+        setMessage("Login successful!");
+      } else {
+        setMessage("Login failed. Please try again.");
+      }
+    } catch (error) {
+      setMessage("Your login attempt failed. Please try again.");
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
       <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleFormSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-4/5 max-w-lg"
+        onSubmit={handleLoginForm}
       >
+        <h1 className="welcome-title text-center font-bold mb-8">Welcome!</h1>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="email"
           >
-            Email
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
             type="text"
             placeholder="Enter your email"
@@ -52,10 +89,9 @@ export default function LoginForm() {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
-            Password
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
             placeholder="Enter your password"
@@ -65,17 +101,19 @@ export default function LoginForm() {
           />
         </div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"
           type="submit"
         >
           Log In
         </button>
-        <p className="text-gray-600 text-sm">
-          Dont have an account?{' '}
-          <Link to="/register" className="text-blue-500 hover:underline">
+        <p className="text-gray-600 text-sm my-6 text-center">
+          Dont have an account?{" "}
+        </p>
+        <button className="m-auto rounded-3xl h-10 w-full md:h-12 bg-none border-solid border-2 border-blue-500 hover:bg-blue-100">
+        <Link to="/register" className="text-blue-500">
             Register here
           </Link>
-        </p>
+        </button>
       </form>
     </div>
   );
