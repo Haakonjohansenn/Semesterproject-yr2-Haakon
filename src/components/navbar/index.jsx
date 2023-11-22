@@ -24,7 +24,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-nav-color p-4">
+    <nav className="bg-nav-color p-6">
       <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between text-neutral-200">
         {/* Logo on the left */}
         <div>

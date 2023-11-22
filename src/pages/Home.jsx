@@ -54,28 +54,34 @@ export default function FetchListings() {
 
   return (
     <div>
-      <div className="parent-hero-banner h-40 bg-nav-color w-full">
-        <div className="hero-banner-img-container w-40 h-40">
-          <img src="hero-banner-image.jpg" className="h-full object-cover"></img>
+      <div className="parent-hero-banner bg-nav-color w-full max-h-60 pb-2 flex justify-between">
+        <div className="hero-banner-img-container w-2/4 h-full max-h-60 flex flex-row justify-between">
+          <img src="hero-banner-image.jpg" className="w-full max-h-60 object-cover rounded-xl"></img>
         </div>
-        <div className="hero-banner-text-container">
-          <h2 className="text-white">Unleash the Bids, Seize the Wins.</h2>
+        <div className="hero-banner-text-container w-2/4 flex flex-col justify-center">
+          <h2 className="text-white font-bold text-lg md:text-3xl text-center leading-tight tracking-tight">
+            Unleash the Bids,
+            <span className="block">Seize the Wins.</span>
+          </h2>
+          <div className="create-listing-container flex justify-center mt-4">
+            <button className="bg-cta-color text-my-black rounded-xl px-2 py-1 text-sm font-semibold md:text-lg">Create Listing</button>
+          </div>
         </div>
       </div>
       <div className="listing-container flex flex-wrap gap-8 justify-center">
         {listings.map(({ id, title, media, description, endsAt }) => (
-          <div key={id} className="listing-item bg-gray-700 w-72 text-center md:w-1/4 border-2 border-solid rounded-lg border-x-my-black">
+          <div key={id} className="listing-item w-72 text-center md:w-1/4 border-2 border-solid rounded-lg border-x-my-black">
             {media && (
               <img
-              src={media}
-              className="object-cover w-full h-40"
-              alt="listing-image"
-              onError={(e) => {
-                e.target.src = "https://source.unsplash.com/300x200/?placeholder"
-              }}
+                src={media}
+                className="object-cover w-full h-40"
+                alt="listing-image"
+                onError={(e) => {
+                  e.target.src = "https://source.unsplash.com/300x200/?placeholder"
+                }}
               />
-              )}
-              <h2>{title}</h2>
+            )}
+            <h2>{title}</h2>
             <div>
               <p>
                 {description}
