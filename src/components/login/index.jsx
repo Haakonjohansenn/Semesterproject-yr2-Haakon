@@ -101,16 +101,16 @@ export default function LoginForm() {
           />
         </div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"
+          className="bg-my-blue hover:bg-my-blue-light text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"
           type="submit"
         >
           Log In
         </button>
-        <p className="text-gray-600 text-sm my-6 text-center">
+        <p className="text-my-black text-sm my-6 text-center">
           Dont have an account?{" "}
         </p>
-        <button className="m-auto rounded-3xl h-10 w-full md:h-12 bg-none border-solid border-2 border-blue-500 hover:bg-blue-100">
-        <Link to="/register" className="text-blue-500">
+        <button className="m-auto rounded-3xl h-10 w-full md:h-12 bg-none border-solid border-2 border-my-blue hover:bg-cta-color">
+        <Link to="/register" className="text-my-blue">
             Register here
           </Link>
         </button>

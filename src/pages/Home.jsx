@@ -54,17 +54,37 @@ export default function FetchListings() {
 
   return (
     <div>
-      <div className="listing-container flex flex-wrap gap-5">
-        {listings.map(({id, title, media, updated}) => (
-                    <div key={id} className="listing-item bg-cyan-400 w-40">
-                    <h2>{title}</h2>
-                    <img src={media} alt="listing-image"></img>
-                    {/* Display other properties as needed, for example: */}
-                    <p>Updated: {updated}</p>
-                    {/* Add more properties as needed */}
-                  </div>
+      <div className="parent-hero-banner h-40 bg-nav-color w-full">
+        <div className="hero-banner-img-container w-40 h-40">
+          <img src="hero-banner-image.jpg" className="h-full object-cover"></img>
+        </div>
+        <div className="hero-banner-text-container">
+          <h2 className="text-white">Unleash the Bids, Seize the Wins.</h2>
+        </div>
+      </div>
+      <div className="listing-container flex flex-wrap gap-8 justify-center">
+        {listings.map(({ id, title, media, description, endsAt }) => (
+          <div key={id} className="listing-item bg-gray-700 w-72 text-center md:w-1/4 border-2 border-solid rounded-lg border-x-my-black">
+            {media && (
+              <img
+              src={media}
+              className="object-cover w-full h-40"
+              alt="listing-image"
+              onError={(e) => {
+                e.target.src = "https://source.unsplash.com/300x200/?placeholder"
+              }}
+              />
+              )}
+              <h2>{title}</h2>
+            <div>
+              <p>
+                {description}
+              </p>
+            </div>
+            <p>Deadline: {endsAt}</p>
+          </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

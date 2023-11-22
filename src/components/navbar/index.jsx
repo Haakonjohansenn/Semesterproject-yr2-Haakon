@@ -24,8 +24,8 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between">
+    <nav className="bg-nav-color p-4">
+      <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between text-neutral-200">
         {/* Logo on the left */}
         <div>
           <Link
@@ -60,18 +60,18 @@ export default function Navbar() {
             <Link
               key={item.href}
               to={item.href}
-              className="text-white hover:text-blue-300 transition duration-300 bg-gray"
+              className="text-white hover:text-blue-300 transition duration-300"
             >
               {item.label}
             </Link>
           ))}
           <div className="ml-auto mr-6">
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="text-white ml-auto">
+              <button onClick={handleLogout} className="text-my-black ml-auto bg-cta-color p-2 rounded-lg">
                 Logout
               </button>
             ) : (
-              <Link to="/login" className="text-white">
+              <Link to="/login" className="text-my-black bg-cta-color p-2 rounded-lg">
                 Login
               </Link>
             )}
