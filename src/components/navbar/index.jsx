@@ -65,13 +65,13 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <div className="ml-auto mr-6">
+          <div className="flex justify-center">
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="text-my-black ml-auto bg-cta-color p-2 rounded-lg">
+              <button onClick={handleLogout} className="text-my-black bg-cta-color rounded-lg">
                 Logout
               </button>
             ) : (
-              <Link to="/login" className="text-my-black bg-cta-color p-2 rounded-lg">
+              <Link to="/login" className="text-my-black bg-cta-color rounded-lg">
                 Login
               </Link>
             )}

@@ -44,11 +44,12 @@ export default function LoginForm() {
         const data = await response.json();
         const newAccessToken = data.accessToken;
 
-        // Store the access token securely in localStorage
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("user_name", data.name);
 
         setAccessToken(newAccessToken);
+
+        console.log(newAccessToken);
 
         navigateToProfile();
 

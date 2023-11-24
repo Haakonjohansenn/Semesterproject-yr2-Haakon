@@ -1,9 +1,25 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '../../../lib/constants';
+import createListing from '../../../lib/api';
 
 export default function Profile() {
   const userId = localStorage.getItem('user_name');
   const [user, setUser] = useState(null);
+
+  const [listingCreated, setListingCreated] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleCreateListing = async () => {
+    try {
+      localStorage.getItem("accessToken");
+      const result = await createListing(); // Call the function
+      console.log(result);
+      setListingCreated(true);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -48,6 +64,13 @@ export default function Profile() {
         ) : (
           <p>Loading user profile...</p>
         )}
+            <div className="bg-cta-color h-screen w-screen">
+      <button className=" bg-cta-color text-my-black" onClick={handleCreateListing}>
+        Create Listing
+      </button>
+      {listingCreated && <p>Listing Created Successfully!</p>}
+      {error && <p>Error: {error}</p>}
+    </div>
     </div>
   );
 }

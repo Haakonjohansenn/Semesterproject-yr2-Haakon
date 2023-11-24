@@ -17,6 +17,7 @@ export default {
       'eggshell': '#EEEBD3',
       'white': '#FFFFFF',
       'my-blue-light': '#0054A3',
+      'success-green': '#5cb85c',
     },
   },
   plugins: [daisyui],
