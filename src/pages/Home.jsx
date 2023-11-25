@@ -25,7 +25,7 @@ export default function FetchListings() {
     const fetchListings = async () => {
       try {
         setIsLoading(true);
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem('accessToken');
 
         const url = new URL(`${API_URL}/auction/listings`);
 

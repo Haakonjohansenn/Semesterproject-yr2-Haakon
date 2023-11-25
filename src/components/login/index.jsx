@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { API_URL } from "../../../lib/constants";
-import { Link, useNavigate } from "@tanstack/react-router";
+// LoginForm.js
+import React, { useState } from 'react';
+import { API_URL } from '../../../lib/constants';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useAuth } from '../authContext'; // Adjust the path accordingly
 
 export default function LoginForm() {
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken") || null
-  );
-  const [message, setMessage] = useState("");
+  const { login } = useAuth();
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleInputChange = (e) => {
@@ -23,20 +23,13 @@ export default function LoginForm() {
 
   const handleLoginForm = async (e) => {
     e.preventDefault();
-    console.log("Login submitted with:", credentials);
-
-    const navigateToProfile = () => {
-      setTimeout(() => {
-        navigate({ to: "/profile" });
-      }, 2000);
-    };
 
     try {
       const response = await fetch(`${API_URL}/auction/auth/login`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(credentials),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -44,21 +37,18 @@ export default function LoginForm() {
         const data = await response.json();
         const newAccessToken = data.accessToken;
 
-        localStorage.setItem("accessToken", newAccessToken);
-        localStorage.setItem("user_name", data.name);
+        localStorage.setItem('accessToken', newAccessToken);
+        localStorage.setItem('user', JSON.stringify(data)); // Store the user data
 
-        setAccessToken(newAccessToken);
+        login(data); // Call the login function from the context with user data
 
-        console.log(newAccessToken);
-
-        navigateToProfile();
-
-        setMessage("Login successful!");
+        setMessage('Login successful!');
+        navigate({ to: '/' });
       } else {
-        setMessage("Login failed. Please try again.");
+        setMessage('Login failed. Please try again.');
       }
     } catch (error) {
-      setMessage("Your login attempt failed. Please try again.");
+      setMessage('Your login attempt failed. Please try again.');
     }
   };
 
@@ -108,10 +98,10 @@ export default function LoginForm() {
           Log In
         </button>
         <p className="text-my-black text-sm my-6 text-center">
-          Dont have an account?{" "}
+          Dont have an account?{' '}
         </p>
         <button className="m-auto rounded-3xl h-10 w-full md:h-12 bg-none border-solid border-2 border-my-blue hover:bg-cta-color">
-        <Link to="/register" className="text-my-blue">
+          <Link to="/register" className="text-my-blue">
             Register here
           </Link>
         </button>

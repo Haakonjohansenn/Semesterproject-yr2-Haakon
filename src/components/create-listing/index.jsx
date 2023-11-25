@@ -33,7 +33,7 @@ export default function CreateListing() {
 
     try {
       setIsLoading(true);
-      const accessToken = localStorage.getItem("accessToken")
+      const accessToken = localStorage.getItem('accessToken')
 
       JSON.stringify(formData)
 
@@ -54,6 +54,7 @@ export default function CreateListing() {
       if (response.ok) {
         console.log("Listing created successfully!");
         setListingCreated(true);
+        console.log(formData);
       } else {
         const responseBody = await response.json();
         console.error("Failed to create listing. Server returned:", response.status, response.statusText, responseBody);
