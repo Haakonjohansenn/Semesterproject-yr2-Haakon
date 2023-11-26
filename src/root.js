@@ -5,6 +5,7 @@ import LoginForm from "./components/login";
 import RegisterForm from "./components/register";
 import HomePage from "./pages/Home";
 import CreateListing from "./components/create-listing";
+import ListingItem from "./components/listingItem";
 
 const rootRoute = new RootRoute({
   component: Root,
@@ -42,12 +43,19 @@ const createListingRoute = new Route({
   component: CreateListing,
 });
 
+const listingItemRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/listingitem/$listingId",
+  component: ListingItem,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
   profileRoute,
   createListingRoute,
+  listingItemRoute,
 ]);
 
 export const router = new Router({ routeTree });

@@ -1,6 +1,7 @@
 import { API_URL } from "../../lib/constants";
 import { useState, useEffect } from "react";
 import CreateListingModal from "../components/create-listing-modal";
+import { Link } from "@tanstack/react-router";
 
 export default function FetchListings() {
   const [loading, setIsLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function FetchListings() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        setIsLoading(true);
+        setIsLoading(loading);
         const accessToken = localStorage.getItem('accessToken');
 
         const url = new URL(`${API_URL}/auction/listings`);
@@ -104,6 +105,13 @@ export default function FetchListings() {
               <p>{description}</p>
             </div>
             <p>Deadline: {endsAt}</p>
+            <div>
+            <Link to={`/listingitem/${id}?id=${id}`}>
+              <button className="rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
+                View Listing
+              </button>
+              </Link>
+            </div>
           </div>
         ))}
       </div>

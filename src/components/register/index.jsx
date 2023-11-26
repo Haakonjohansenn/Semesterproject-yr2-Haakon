@@ -30,7 +30,6 @@ export default function RegisterForm() {
     validateEmail(email.value);
 
     if (document.getElementById("submit-button").disabled) {
-      // Email is not valid, abort submission
       return;
     }
 
@@ -60,7 +59,6 @@ export default function RegisterForm() {
         const data = await response.json();
         const newAccessToken = data.accessToken;
 
-        // Store the access token securely in localStorage
         localStorage.setItem('accessToken', newAccessToken);
 
         setAccessToken(newAccessToken);

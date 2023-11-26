@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { RouterProvider } from '@tanstack/react-router';
 import { AuthProvider } from '../src/components/authContext';
 import router from './root.js';

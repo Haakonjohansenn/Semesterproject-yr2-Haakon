@@ -29,7 +29,7 @@ export default function Navbar() {
             <div className="relative group">
               <button
                 onClick={toggleMenu}
-                className="text-my-black bg-cta-color rounded-lg px-4 py-2"
+                className="text-my-black bg-cta-color rounded-lg px-3 py-1"
               >
                 <div className="flex flex-row gap-1">
                 {user && user.name}
