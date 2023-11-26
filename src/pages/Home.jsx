@@ -30,6 +30,9 @@ export default function FetchListings() {
 
         const url = new URL(`${API_URL}/auction/listings`);
 
+        url.searchParams.append("_seller", "true");
+        url.searchParams.append("_bids", "true");
+
         const listingResponse = await fetch(url, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -88,7 +91,7 @@ export default function FetchListings() {
       </div>
 
       <div className="listing-container flex flex-wrap gap-8 justify-center">
-        {listings.map(({ id, title, media, description, endsAt }) => (
+        {listings.map(({ id, title, media, description, endsAt, seller }) => (
           <div key={id} className="listing-item w-72 text-center md:w-1/4 border-2 border-solid rounded-lg border-x-my-black">
             {media && (
               <img
@@ -105,6 +108,7 @@ export default function FetchListings() {
               <p>{description}</p>
             </div>
             <p>Deadline: {endsAt}</p>
+            <p>Seller: {seller.name} </p>
             <div>
             <Link to={`/listingitem/${id}?id=${id}`}>
               <button className="rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
