@@ -121,7 +121,6 @@ export default function RegisterForm() {
             id="avatar"
             type="text"
             placeholder="URL for Your Avatar"
-            required
           />
         </div>
         <div className="flex items-center justify-between">

@@ -1,19 +1,36 @@
-// authContext.js
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('accessToken'));
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const [credits, setCredits] = useState(JSON.parse(localStorage.getItem('credits')))
-  const [avatar, setAvatar] = useState(localStorage.getItem('avatar'))
+  const [credits, setCredits] = useState(Number(localStorage.getItem('credits')) || 0);
+  const [avatar, setAvatar] = useState(localStorage.getItem('avatar'));
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('credits', credits);
+    localStorage.setItem('avatar', avatar);
+  }, [user, credits, avatar]);
+
+  const updateCredits = (newCredits) => {
+    const parsedCredits = Number(newCredits);
+    console.log("Setting credits to:", parsedCredits);
+    localStorage.setItem("credits", parsedCredits);
+    setCredits(parsedCredits);
+  };
 
   const login = (userData) => {
     setIsLoggedIn(true);
     setUser(userData);
-    setCredits(credits);
-    setAvatar(avatar);
+    setCredits(Number(userData.credits));
+    setAvatar(userData.avatar);
+  };
+
+  const updateAvatar = (newAvatar) => {
+    localStorage.setItem("avatar", newAvatar);
+    setAvatar(newAvatar);
   };
 
   const logout = () => {
@@ -28,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, credits, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, credits, avatar, login, logout, updateCredits, updateAvatar }}>
       {children}
     </AuthContext.Provider>
   );
