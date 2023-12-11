@@ -1,4 +1,3 @@
-// Navbar.js
 import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
 import { NAVIGATION } from '../../../lib/constants';

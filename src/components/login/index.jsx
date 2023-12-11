@@ -1,8 +1,7 @@
-// LoginForm.js
 import { useState } from 'react';
 import { API_URL } from '../../../lib/constants';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useAuth } from '../authContext'; // Adjust the path accordingly
+import { useAuth } from '../authContext';
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -13,42 +12,64 @@ export default function LoginForm() {
     password: '',
   });
 
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prevCredentials) => ({
       ...prevCredentials,
       [name]: value,
     }));
+
+    // Validate input and set corresponding validity state
+    if (name === 'email') {
+      setIsEmailValid(validateEmail(value));
+    } else if (name === 'password') {
+      setIsPasswordValid(validatePassword(value));
+    }
+  };
+
+  const validateEmail = (email) => {
+    return email.includes('@');
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
   };
 
   const handleLoginForm = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch(`${API_URL}/auction/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    if (isEmailValid && isPasswordValid) {
+      try {
+        const response = await fetch(`${API_URL}/auction/auth/login`, {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        const newAccessToken = data.accessToken;
+        if (response.ok) {
+          const data = await response.json();
+          const newAccessToken = data.accessToken;
 
-        localStorage.setItem('accessToken', newAccessToken);
-        localStorage.setItem('user', JSON.stringify(data)); // Store the user data
+          localStorage.setItem('accessToken', newAccessToken);
+          localStorage.setItem('user', JSON.stringify(data)); // Store the user data
 
-        login(data); // Call the login function from the context with user data
+          login(data); // Call the login function from the context with user data
 
-        setMessage('Login successful!');
-        navigate({ to: '/' });
-      } else {
-        setMessage('Login failed. Please try again.');
+          setMessage('Login successful!');
+          navigate({ to: '/' });
+        } else {
+          setMessage('Login failed. Please try again.');
+        }
+      } catch (error) {
+        setMessage('Your login attempt failed. Please try again.');
       }
-    } catch (error) {
-      setMessage('Your login attempt failed. Please try again.');
+    } else {
+      setMessage('Invalid email or password. Please check your inputs.');
     }
   };
 
@@ -61,12 +82,15 @@ export default function LoginForm() {
         <h1 className="welcome-title text-center font-bold mb-8 md:text-2xl">Welcome!</h1>
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-my-gray text-sm font-bold mb-2"
             htmlFor="email"
           >
+            Email:
           </label>
           <input
-            className="shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className={`shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 mb-4 text-my-gray leading-tight focus:outline-none focus:shadow-outline ${
+              isEmailValid ? 'border-my-gray' : 'border-not-success-red'
+            }`}
             id="email"
             type="text"
             placeholder="Enter your email"
@@ -74,15 +98,21 @@ export default function LoginForm() {
             value={credentials.email}
             onChange={handleInputChange}
           />
+          {!isEmailValid && (
+            <p className="text-not-success-red text-sm">Invalid email format</p>
+          )}
         </div>
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-my-gray text-sm font-bold mb-2"
             htmlFor="password"
           >
+            Password:
           </label>
           <input
-            className="shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className={`shadow appearance-none border rounded w-full sm:w-270 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+              isPasswordValid ? 'border-my-gray' : 'border-not-success-red'
+            }`}
             id="password"
             type="password"
             placeholder="Enter your password"
@@ -90,6 +120,11 @@ export default function LoginForm() {
             value={credentials.password}
             onChange={handleInputChange}
           />
+          {!isPasswordValid && (
+            <p className="text-not-success-red text-sm">
+              Password must be at least 6 characters
+            </p>
+          )}
         </div>
         <button
           className="bg-my-blue hover:bg-my-blue-light text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"

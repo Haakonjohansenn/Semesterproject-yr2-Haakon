@@ -18,6 +18,8 @@ export default {
       'white': '#FFFFFF',
       'my-blue-light': '#0054A3',
       'success-green': '#5cb85c',
+      'not-success-red': '#ff3333',
+      'my-gray': '#eaeaea',
     },
   },
   plugins: [daisyui],

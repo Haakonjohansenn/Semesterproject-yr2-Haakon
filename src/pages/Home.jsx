@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import CreateListingModal from "../components/create-listing-modal";
 import { Link } from "@tanstack/react-router";
 
-const CountdownTimer = ({ deadline }) => {
+export const CountdownTimer = ({ deadline }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
@@ -45,13 +45,13 @@ export default function FetchListings() {
   const [loading, setIsLoading] = useState(true);
   const [listings, setListings] = useState([]);
   const [visibleListings, setVisibleListings] = useState([]);
-  const [searchInput, handleOnSearch] = useState("");
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMoreButton, setShowMoreButton] = useState(true);
+  const [searchInput, setSearchInput] = useState("");
 
   const handleSearchInputChange = (event) => {
-    handleOnSearch(event.target.value);
+    setSearchInput(event.target.value);
   };
 
   const openModal = () => {
@@ -102,6 +102,13 @@ export default function FetchListings() {
 
     fetchListings();
   }, []);
+
+  useEffect(() => {
+    const filteredListings = listings.filter((listing) =>
+      listing.title.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setVisibleListings(filteredListings.slice(0, 12));
+  }, [searchInput, listings]);
 
   return (
     <div>

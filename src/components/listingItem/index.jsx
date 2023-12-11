@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../../lib/constants";
 import { useParams } from "@tanstack/react-router";
 import { useAuth } from "../authContext";
+import { CountdownTimer } from "../../pages/Home";
 
 const getTimeDifference = (createdAt) => {
   const now = new Date();
@@ -32,7 +33,7 @@ export default function ListingItem() {
   const [showBidInput, setShowBidInput] = useState(false);
   const [bidValue, setBidValue] = useState("");
   const { updateCredits } = useAuth();
-  const user = JSON.parse(localStorage.getItem('user')); // Parse the stored user data
+  const user = JSON.parse(localStorage.getItem('user'));
   const userId = user ? user.name : null; 
 
   const toggleBidInput = () => {
@@ -56,7 +57,6 @@ export default function ListingItem() {
         const responseData = await response.json();
         console.log("Bid placed successfully:", responseData);
 
-        // Make a separate request to fetch updated credits
         const creditsResponse = await fetch(`${API_URL}/auction/profiles/${userId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -68,7 +68,7 @@ export default function ListingItem() {
           const newCredits = creditsData.credits;
           updateCredits(newCredits);
         } else {
-          setError(error)// Handle error fetching credits
+          setError(error)
         }
 
         setShowBidInput(false);
@@ -108,53 +108,56 @@ export default function ListingItem() {
     fetchListing();
   }, [listingId]);
 
+  const highestBid = listing?.bids && listing.bids.reduce((maxBid, bid) => (bid.amount > maxBid.amount ? bid : maxBid), listing.bids[0]);
+
   if (isLoading) return <h1>Loading...</h1>;
   if (error) return <h1>No listing found. {error?.message}</h1>;
 
   return (
     <div className="flex flex-wrap justify-center">
       <div className="flex flex-wrap justify-center gap-8 mt-36">
-        <img src={listing?.media} className="w-3/4 h-2/3 object-cover"></img>
-        <div className="flex flex-col items-center">
+        <div className="w-3/4 h-2/5 bg-eggshell flex justify-center md:w-7/12 md:h-80">
+          <img src={listing?.media} className="h-3/3 w-7/12 object-cover md:w-7/12 md:h-80 flex justify-center"></img>
+        </div>
+        <div className="flex flex-col">
           <div className="">
             <h2 className="font-bold">{listing.title}</h2>
           </div>
           <div className="">
             <h3>Posted by: {listing.seller?.name || "Unknown Seller"}</h3>
           </div>
-          <div className="w-screen flex flex-col">
-            <div className="bg-my-blue w-3/4 flex flex-col rounded-xl mx-auto">
-              Latest bids:{" "}
-              {listing.bids &&
-                listing.bids.map((bid) => (
-                  <div key={bid.id}>
-                    <div>
-                      <p>
-                        {bid.bidderName || "Unknown User"} bid: {bid.amount}
-                      </p>
-                      <p>{getTimeDifference(bid.created)}</p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-            <div className="flex justify-center">
-              <button className="bg-cta-color p-4 rounded-2xl" onClick={toggleBidInput}>
-                Place Bid
-              </button>
-              {showBidInput && (
+          <div className="flex flex-col mt-8">
+            <div className="mb-4">
+              Winning bid:{" "}
+              {highestBid && (
                 <div>
-                  <input
-                    type="number"
-                    value={bidValue}
-                    onChange={(e) => setBidValue(e.target.value)}
-                    placeholder="Enter your bid"
-                  />
-                  <button className="bg-cta-color p-2 rounded-md" onClick={handleBidSubmit}>
-                    Submit Bid
-                  </button>
+                  <p className="text-my-black">
+                    {highestBid.bidderName || "Unknown User"} bid: {highestBid.amount}
+                  </p>
+                  <p className="text-my-black">{getTimeDifference(highestBid.created)}</p>
+                  <div className="my-2">Listing ends in: <CountdownTimer deadline={listing.endsAt} /></div>
                 </div>
               )}
             </div>
+            <div className="flex justify-center md:mt-8">
+              <button className="bg-cta-color p-4 rounded-2xl" onClick={toggleBidInput}>
+                Place Bid
+              </button>
+            </div>
+            {showBidInput && (
+              <div className="flex flex-col items-center mt-4">
+                <input
+                  type="number"
+                  value={bidValue}
+                  onChange={(e) => setBidValue(e.target.value)}
+                  placeholder="Enter your bid"
+                  className="p-2 border rounded-md"
+                />
+                <button className="bg-cta-color p-2 rounded-md mt-2" onClick={handleBidSubmit}>
+                  Submit Bid
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
