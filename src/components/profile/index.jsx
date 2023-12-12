@@ -118,8 +118,8 @@ export default function Profile() {
       {userProfile ? (
         <div className="flex flex-col items-center my-4">
           <div className="avatar-container flex rounded-full w-28 h-28 justify-center bg-my-blue my-4">
-          {loading && <p>Loading user profile...</p>}
-      {error && <p className="text-not-success-red">{error}</p>}
+            {loading && <p>Loading user profile...</p>}
+            {error && <p className="text-not-success-red">{error}</p>}
             {userProfile.avatar && (
               <img
                 src={userProfile.avatar}
@@ -144,9 +144,9 @@ export default function Profile() {
             </button>
           </div>
           <div className="my-2 items-center">
-          <p>Name: {userProfile.name}</p>
-          <p>Email: {userProfile.email}</p>
-          <p>Credits: {userProfile.credits}</p>
+            <p>Name: {userProfile.name}</p>
+            <p>Email: {userProfile.email}</p>
+            <p>Credits: {userProfile.credits}</p>
           </div>
 
           <h2 className="text-center">My listings:</h2>
