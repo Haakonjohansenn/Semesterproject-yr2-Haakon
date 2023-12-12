@@ -10,9 +10,7 @@ export default function Profile() {
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [loading, setIsLoading] = useState(true);
   const [listings, setListings] = useState();
-  const [listingsBid, setListingsBid] = useState([]);
-
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -28,10 +26,13 @@ export default function Profile() {
           const userProfileData = await response.json();
           setUserProfile(userProfileData);
         } else {
-          // Handle error (e.g., token expired, unauthorized)
+          setError("Error fetching user profile. Please try again.");
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        setError("An unexpected error occurred. Please try again later.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -43,7 +44,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        setIsLoading(loading);
+        setIsLoading(true);
         const accessToken = localStorage.getItem("accessToken");
 
         const url = new URL(
@@ -58,18 +59,22 @@ export default function Profile() {
           },
         });
 
-        const fetchedListings = await listingResponse.json();
-
-        setListings(fetchedListings);
+        if (listingResponse.ok) {
+          const fetchedListings = await listingResponse.json();
+          setListings(fetchedListings);
+        } else {
+          setError("Error fetching listings. Please try again.");
+        }
       } catch (error) {
-        setError(error);
+        console.error("Error fetching listings:", error);
+        setError("An unexpected error occurred while fetching listings.");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchListings();
-  }, []);
+  }, [userId]);
 
   const handleAvatarUrlChange = (event) => {
     setNewAvatarUrl(event.target.value);
@@ -98,21 +103,23 @@ export default function Profile() {
           avatar: newAvatarUrl,
         });
         setNewAvatarUrl("");
-        // Call updateAvatar from the context to update the Navbar
         updateAvatar(newAvatarUrl);
       } else {
-        console.error("Error updating avatar:", response.statusText);
+        setError("Error updating avatar. Please try again.");
       }
     } catch (error) {
       console.error("Error updating avatar:", error);
+      setError("An unexpected error occurred while updating avatar.");
     }
   };
 
   return (
-    <div className="parent-container flex justify-center">
+    <div className="parent-container flex justify-center my-4">
       {userProfile ? (
-        <div className="flex flex-col justify-center">
-          <div className="avatar-container flex rounded-full w-28 h-28 justify-center bg-my-blue">
+        <div className="flex flex-col items-center my-4">
+          <div className="avatar-container flex rounded-full w-28 h-28 justify-center bg-my-blue my-4">
+          {loading && <p>Loading user profile...</p>}
+      {error && <p className="text-not-success-red">{error}</p>}
             {userProfile.avatar && (
               <img
                 src={userProfile.avatar}
@@ -121,24 +128,28 @@ export default function Profile() {
               />
             )}
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center my-4">
             <input
               type="url"
               placeholder="URL for avatar image"
-              className="w-44 border-2 border-solid"
+              className="w-20 border-2 border-solid"
               value={newAvatarUrl}
               onChange={handleAvatarUrlChange}
             />
             <button
               onClick={updateAvatar}
-              className="ml-2 bg-cta-color text-my-black rounded-md px-2 py-1 text-sm font-semibold md:text-lg"
+              className="ml-2 bg-cta-color text-my-black rounded-md px-2 py-1 text-sm font-semibold"
             >
               Update Avatar
             </button>
           </div>
+          <div className="my-2 items-center">
           <p>Name: {userProfile.name}</p>
           <p>Email: {userProfile.email}</p>
           <p>Credits: {userProfile.credits}</p>
+          </div>
+
+          <h2 className="text-center">My listings:</h2>
           <div className="listing-container flex flex-wrap gap-8 justify-center">
             {Array.isArray(listings) && listings.length > 0 ? (
               listings.map(
