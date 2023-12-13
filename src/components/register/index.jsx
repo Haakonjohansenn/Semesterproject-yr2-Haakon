@@ -12,6 +12,7 @@ export default function RegisterForm() {
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [avatarError, setAvatarError] = useState('');
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
