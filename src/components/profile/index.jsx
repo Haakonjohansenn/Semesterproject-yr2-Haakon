@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { API_URL } from "../../../lib/constants";
 import { CountdownTimer } from "../../pages/Home";
@@ -9,7 +9,7 @@ export default function Profile() {
   const [userProfile, setUserProfile] = useState(null);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [loading, setIsLoading] = useState(true);
-  const [listings, setListings] = useState();
+  const [listings, setListings] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -103,13 +103,35 @@ export default function Profile() {
           avatar: newAvatarUrl,
         });
         setNewAvatarUrl("");
-        updateAvatar(newAvatarUrl);
       } else {
         setError("Error updating avatar. Please try again.");
       }
     } catch (error) {
       console.error("Error updating avatar:", error);
       setError("An unexpected error occurred while updating avatar.");
+    }
+  };
+
+  const handleDeleteListing = async (listingId) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await fetch(`${API_URL}/auction/listings/${listingId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        // Update the listings after successful deletion
+        const updatedListings = listings.filter((listing) => listing.id !== listingId);
+        setListings(updatedListings);
+      } else {
+        setError("Error deleting listing. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+      setError("An unexpected error occurred while deleting listing.");
     }
   };
 
@@ -152,45 +174,48 @@ export default function Profile() {
           <h2 className="text-center">My listings:</h2>
           <div className="listing-container flex flex-wrap gap-8 justify-center">
             {Array.isArray(listings) && listings.length > 0 ? (
-              listings.map(
-                ({ id, title, media, description, endsAt, bids }) => (
-                  <div
-                    key={id}
-                    className="listing-item w-72 text-center md:w-1/4 rounded-lg shadow-lg border-x-my-black"
-                  >
-                    <h2>{title}</h2>
+              listings.map(({ id, title, media, description, endsAt, bids }) => (
+                <div
+                  key={id}
+                  className="listing-item w-72 text-center md:w-1/4 rounded-lg shadow-lg border-x-my-black"
+                >
+                  <h2>{title}</h2>
+                  <div>
+                    <img src={media} alt="listing-image" />
+                  </div>
+                  <p>{description}</p>
+                  <div>
+                    Listing End in:
+                    <CountdownTimer deadline={endsAt} />
+                  </div>
+                  <div>
+                    {Array.isArray(bids) && bids.length > 0 ? (
+                      bids.map((bid) => (
+                        <div key={bid.id}>
+                          <div></div>
+                          <p>{bid.bidderName} Bid:</p>
+                          <p>{bid.amount}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No bids available for this listing.</p>
+                    )}
                     <div>
-                      <img src={media} alt="listing-image" />
-                    </div>
-                    <p>{description}</p>
-                    <div></div>
-                    <div>
-                      Listing Enda in:
-                      <CountdownTimer deadline={endsAt} />
-                    </div>
-                    <div>
-                      {Array.isArray(bids) && bids.length > 0 ? (
-                        bids.map((bid) => (
-                          <div key={bid.id}>
-                            <div></div>
-                            <p>{bid.bidderName} Bid:</p>
-                            <p>{bid.amount}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p>No bids available for this listing.</p>
-                      )}
-                      <div>
-                        <Link to={`/listingitem/${id}?id=${id}`}>
-                          <button className="rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
-                            View Listing
-                          </button>
-                        </Link>
-                      </div>
+                      <Link to={`/listingitem/${id}?id=${id}`}>
+                        <button className="rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
+                          View Listing
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteListing(id)}
+                        className="rounded-xl bg-not-success-red py-1 px-2 font-semibold my-2"
+                      >
+                        Delete Listing
+                      </button>
                     </div>
                   </div>
-                )
-              )
+                </div>
+              ))
             ) : (
               <p>No listings available.</p>
             )}
