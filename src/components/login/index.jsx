@@ -63,10 +63,9 @@ export default function LoginForm() {
           setMessage('Login successful!');
           setLoginSuccess(true);
 
-          // Add a delay before redirecting
           setTimeout(() => {
             navigate({ to: '/' });
-          }, 2000); // 2000 milliseconds (2 seconds) delay
+          }, 2000);
         } else {
           setMessage('Login failed. Please try again.');
         }
