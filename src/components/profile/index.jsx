@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { API_URL } from "../../../lib/constants";
 import { CountdownTimer } from "../../pages/Home";
@@ -26,7 +26,8 @@ export default function Profile() {
           const userProfileData = await response.json();
           setUserProfile(userProfileData);
         } else {
-          setError("Error fetching user profile. Please try again.");
+          const errorData = await response.json();
+          setError(`Error fetching user profile: ${errorData.message}`);
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -63,7 +64,8 @@ export default function Profile() {
           const fetchedListings = await listingResponse.json();
           setListings(fetchedListings);
         } else {
-          setError("Error fetching listings. Please try again.");
+          const errorData = await listingResponse.json();
+          setError(`Error fetching listings: ${errorData.message}`);
         }
       } catch (error) {
         console.error("Error fetching listings:", error);
@@ -104,7 +106,8 @@ export default function Profile() {
         });
         setNewAvatarUrl("");
       } else {
-        setError("Error updating avatar. Please try again.");
+        const errorData = await response.json();
+        setError(`Error updating avatar: ${errorData.message}`);
       }
     } catch (error) {
       console.error("Error updating avatar:", error);
@@ -127,7 +130,8 @@ export default function Profile() {
         const updatedListings = listings.filter((listing) => listing.id !== listingId);
         setListings(updatedListings);
       } else {
-        setError("Error deleting listing. Please try again.");
+        const errorData = await response.json();
+        setError(`Error deleting listing: ${errorData.message}`);
       }
     } catch (error) {
       console.error("Error deleting listing:", error);
