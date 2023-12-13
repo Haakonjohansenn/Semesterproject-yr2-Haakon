@@ -70,7 +70,7 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <Link to="/login" className="text-my-black bg-cta-color rounded-lg">
+            <Link to="/login" className="text-my-black bg-cta-color rounded-lg p-2">
               Login
             </Link>
           )}
