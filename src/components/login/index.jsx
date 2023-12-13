@@ -6,6 +6,7 @@ import { useAuth } from '../authContext';
 export default function LoginForm() {
   const { login } = useAuth();
   const [message, setMessage] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: '',
@@ -22,7 +23,6 @@ export default function LoginForm() {
       [name]: value,
     }));
 
-    // Validate input and set corresponding validity state
     if (name === 'email') {
       setIsEmailValid(validateEmail(value));
     } else if (name === 'password') {
@@ -56,12 +56,17 @@ export default function LoginForm() {
           const newAccessToken = data.accessToken;
 
           localStorage.setItem('accessToken', newAccessToken);
-          localStorage.setItem('user', JSON.stringify(data)); // Store the user data
+          localStorage.setItem('user', JSON.stringify(data));
 
-          login(data); // Call the login function from the context with user data
+          login(data);
 
           setMessage('Login successful!');
-          navigate({ to: '/' });
+          setLoginSuccess(true);
+
+          // Add a delay before redirecting
+          setTimeout(() => {
+            navigate({ to: '/' });
+          }, 2000); // 2000 milliseconds (2 seconds) delay
         } else {
           setMessage('Login failed. Please try again.');
         }
@@ -79,6 +84,11 @@ export default function LoginForm() {
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-4/5 max-w-lg"
         onSubmit={handleLoginForm}
       >
+        {message && (
+          <div className={`mb-4 text-center ${loginSuccess ? 'text-green-500' : 'text-red-500'}`}>
+            {message}
+          </div>
+        )}
         <h1 className="welcome-title text-center font-bold mb-8 md:text-2xl">Welcome!</h1>
         <div className="mb-4">
           <label
@@ -127,13 +137,15 @@ export default function LoginForm() {
           )}
         </div>
         <button
-          className="bg-my-blue hover:bg-my-blue-light text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4"
+          className={`bg-my-blue hover:bg-my-blue-light text-white font-bold py-2 px-4 m-auto rounded-3xl h-10 md:h-12 w-full focus:outline-none focus:shadow-outline mb-4 ${
+            loginSuccess ? 'bg-login-success' : ''
+          }`}
           type="submit"
         >
-          Log In
+          {loginSuccess ? 'Login successful!' : 'Log In'}
         </button>
         <p className="text-my-black text-sm my-6 text-center">
-          Dont have an account?{' '}
+          Don't have an account?{' '}
         </p>
         <button className="m-auto rounded-3xl h-10 w-full md:h-12 bg-none border-solid border-2 border-my-blue hover:bg-cta-color">
           <Link to="/register" className="text-my-blue">

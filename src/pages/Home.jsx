@@ -163,7 +163,7 @@ export default function FetchListings() {
             <p>Seller: {seller.name} </p>
             <div>
               <Link to={`/listingitem/${id}?id=${id}`}>
-                <button className="rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
+                <button className="listing-item-button rounded-xl bg-cta-color py-1 px-2 font-semibold my-2">
                   View Listing
                 </button>
               </Link>
