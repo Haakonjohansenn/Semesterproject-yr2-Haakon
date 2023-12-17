@@ -1,8 +1,26 @@
-import { Link } from "@tanstack/react-router";
-import { NAVIGATION } from "../../../lib/constants";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
+import { NAVIGATION } from '../../../lib/constants';
+import { useAuth } from '../authContext';
 
 export default function Navbar() {
+  const { isLoggedIn, user, logout, credits, avatar } = useAuth();
+  const [displayedCredits, setDisplayedCredits] = useState(0);
+
+  useEffect(() => {
+    if (credits !== null && credits !== undefined) {
+      setDisplayedCredits(Number(credits));
+      console.log("Updated credits:", credits);
+    }
+  }, [credits]);
+  
+  useEffect(() => {
+    if (credits !== null && credits !== undefined) {
+      setDisplayedCredits(Number(credits));
+      console.log("Initial credits:", credits);
+    }
+  }, []);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -10,47 +28,52 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between">
-        {/* Logo on the left */}
+    <nav className="bg-nav-color p-6 flex flex-row">
+      <div className="container mx-auto flex flex-row items-center justify-between text-neutral-200">
         <div>
-          <Link
-            to="/"
-            className="text-white text-lg lg:text-3xl font-extrabold tracking-tight"
-          >
+          <Link to="/" className="text-white text-lg lg:text-3xl font-extrabold tracking-tight">
             Auction House
           </Link>
         </div>
 
-        {/* Hamburger icon for small screens on the right */}
-        <div className="lg:hidden ml-auto">
-          <button
-            onClick={toggleMenu}
-            className="text-white focus:outline-none text-transparent"
-          >
-            <div className="space-y-1.5">
-              <div className="w-6 h-0.5 bg-white"></div>
-              <div className="w-6 h-0.5 bg-white"></div>
-              <div className="w-6 h-0.5 bg-white"></div>
+        <div className="flex items-center">
+          {isLoggedIn ? (
+            <div className="relative group">
+              <button onClick={toggleMenu} className="text-my-black bg-cta-color rounded-lg px-3 py-1">
+                <div className="flex flex-row gap-1">
+                  {user && user.name}
+                  {avatar && <img src={avatar} className="rounded-full h-6 w-6" alt="User Avatar" />}
+                </div>
+              </button>
+              {isOpen && (
+                <div className="absolute right-0 mt-2 bg-cta-color rounded-md shadow-md flex flex-col items-center">
+                  {NAVIGATION.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className="text-my-black hover:underline transition duration-300"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  <div>
+                    <p className="text-my-black">Credits:</p>
+                    <p className="text-center text-my-black">{displayedCredits}</p>
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-2 bg-nav-color hover:bg-my-blue-light transition delay-"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
-          </button>
-        </div>
-
-        {/* Navbar links for larger screens and centered for small screens */}
-        <div
-          className={`lg:flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 ${
-            isOpen ? "flex flex-col items-center" : "hidden"
-          } justify-center mt-4 lg:mt-0`}
-        >
-          {NAVIGATION.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className="text-white hover:text-blue-300 transition duration-300"
-            >
-              {item.label}
+          ) : (
+            <Link to="/login" className="text-my-black bg-cta-color rounded-lg p-2">
+              Login
             </Link>
-          ))}
+          )}
         </div>
       </div>
     </nav>
