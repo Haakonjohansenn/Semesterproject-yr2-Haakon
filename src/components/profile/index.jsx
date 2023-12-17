@@ -126,7 +126,6 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        // Update the listings after successful deletion
         const updatedListings = listings.filter((listing) => listing.id !== listingId);
         setListings(updatedListings);
       } else {
